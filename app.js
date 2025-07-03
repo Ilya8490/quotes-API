@@ -5,30 +5,30 @@ const quote = document.querySelector("#quote");
 const url = "https://api.api-ninjas.com/v1/quotes?category=success";
 const apiKey = "VUYcJGXeDyKh2DTPx/M9Hg==G6j3ytGYEtT8t6Cg";
 
-// click button to next quote
-btn.addEventListener("click", async() => {
-    const randomquote = await getRandomQuote();
-    display();
+btn.addEventListener("click", () => {
+    getRandomQuote();
 });
 
-const display =() =>{
-    quote.style.display="block";
-    author.style.display="block";
-}
-
-//Call the function to fetch and display a quote
 async function getRandomQuote() {
-    try{
-        // Make a request to the API with the required headers
-        const config = {headers : {'X-Api-Key': apiKey}}
-        const res = await fetch(url ,config);
-        let data = await res.json();
+    try {
+        quote.innerHTML = "Loading...";
+        author.innerHTML = "";
+        const config = { headers: { 'X-Api-Key': apiKey } };
+        const res = await fetch(url, config);
+        const data = await res.json();
 
-          // Display the quote on your webpage
-        quote.innerHTML =  data[0].quote;
-        author.innerHTML = data[0].author;
-       
-    }catch(err){
-        console.log("Error",err);
+        if (data.length > 0) {
+            quote.innerHTML = data[0].quote;
+            author.innerHTML = data[0].author;
+            quote.style.display = "block";
+            author.style.display = "block";
+        } else {
+            quote.innerHTML = "No quote found.";
+            author.innerHTML = "";
+        }
+    } catch (err) {
+        console.log("Error", err);
+        quote.innerHTML = "Failed to load quote.";
+        author.innerHTML = "";
     }
 }
